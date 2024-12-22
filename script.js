@@ -2,6 +2,7 @@
 let currentQuestion = 0;
 let score = 0;
 let questions = [];
+let userName = ''; // Variable to hold the user's name
 
 // DOM elements
 const questionElement = document.getElementById('question');
@@ -38,7 +39,7 @@ function loadQuestion() {
     choicesElement.innerHTML = '';
     question.choices.forEach((choice, index) => {
         const button = document.createElement('button');
-        button.innerHTML = `<i class="far fa-circle"></i> ${choice}`;
+        button.innerHTML = choice;
         button.addEventListener('click', () => selectChoice(button));
         choicesElement.appendChild(button);
     });
@@ -52,10 +53,8 @@ function loadQuestion() {
 function selectChoice(selectedButton) {
     choicesElement.querySelectorAll('button').forEach(button => {
         button.classList.remove('selected');
-        button.querySelector('i').className = 'far fa-circle';
     });
     selectedButton.classList.add('selected');
-    selectedButton.querySelector('i').className = 'fas fa-check-circle';
     submitButton.style.display = 'block';
 }
 
@@ -99,12 +98,21 @@ function updateProgressBar() {
 function finishQuiz() {
     questionElement.textContent = 'Quiz Completed!';
     choicesElement.innerHTML = '';
-    resultElement.textContent = `Your final score is: ${score} out of ${questions.length}`;
+    resultElement.textContent = `${userName}, your final score is: ${score} out of ${questions.length}`;
     submitButton.style.display = 'none';
+}
+
+// Get user's name at the start of the quiz
+function getUserName() {
+    userName = prompt("Please enter your name:");
+    if (!userName) {
+        userName = "Guest"; // Default name if no input is given
+    }
 }
 
 // Event listeners
 submitButton.addEventListener('click', submitAnswer);
 
 // Start the quiz
+getUserName(); // Prompt for user name before fetching questions
 fetchQuestions();
